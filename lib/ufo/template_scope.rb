@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 module Ufo
   class TemplateScope
+    extend Memoist
     attr_reader :helper
     attr_reader :task_definition_name
     def initialize(helper=nil, task_definition_name=nil)
@@ -43,6 +46,15 @@ module Ufo
         hash[key.to_sym] = instance_variable_get(var)
       end
       hash
+    end
+
+    def network
+      Ufo::Setting::Profile.new(:network, settings[:network_profile]).data
+    end
+    memoize :network
+
+    def settings
+      Ufo.settings.deep_symbolize_keys
     end
   end
 end

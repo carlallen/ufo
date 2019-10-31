@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
 module Ufo
   class Setting
+    autoload :Profile, 'ufo/setting/profile'
+
     def initialize(check_ufo_project=true)
       @check_ufo_project = check_ufo_project
     end

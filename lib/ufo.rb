@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $:.unshift(File.expand_path('../', __FILE__))
 require 'ufo/version'
 require 'deep_merge'
@@ -15,6 +17,7 @@ module Ufo
   autoload :Sequence, 'ufo/sequence'
   autoload :CLI, 'ufo/cli'
   autoload :Help, 'ufo/help'
+  autoload :Setting, 'ufo/setting'
   autoload :Ship, 'ufo/ship'
   autoload :Task, 'ufo/task'
   autoload :Destroy, 'ufo/destroy'

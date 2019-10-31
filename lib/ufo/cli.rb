@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'thor'
 require 'ufo/command'
 
@@ -36,9 +38,10 @@ module Ufo
     desc "deploy SERVICE", "Deploy task definition to ECS service without re-building the definition."
     long_desc Help.text(:deploy)
     ship_options.call
+    option :register, type: :boolean, desc: "Register task definition", default: true
     def deploy(service)
       task_definition = options[:task] || service # convention
-      Tasks::Register.register(task_definition, options)
+      Tasks::Register.register(task_definition, options)  if options[:register]
       ship = Ship.new(service, task_definition, options)
       ship.deploy
     end
@@ -76,11 +79,11 @@ module Ufo
 
     desc "task TASK_DEFINITION", "Run a one-time task."
     long_desc Help.text(:task)
-    option :docker, type: :boolean, desc: "Enable docker build and push", default: true
+    option :task_only, type: :boolean, desc: "Skip docker and task register steps. Only run the task."
     option :command, type: :array, aliases: 'c', desc: "Override the command used for the container"
     def task(task_definition)
-      Docker::Builder.build(options) if @options[:docker]
-      Tasks::Builder.ship(task_definition, options)
+      Docker::Builder.build(options) unless @options[:task_only]
+      Tasks::Builder.ship(task_definition, options) unless @options[:task_only]
       Task.new(task_definition, options).run
     end
 
